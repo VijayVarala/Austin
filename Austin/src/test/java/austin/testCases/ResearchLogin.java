@@ -42,7 +42,7 @@ public class ResearchLogin extends BaseClass
 
 	private void handleLoginFailure() throws IOException 
 	{
-		
+		System.out.println("Manoranjan");
 		logger.info("Research login failed");
 		Capture.CaptureScreenshot(driver, "img.png");
 		Assert.assertTrue(false);
