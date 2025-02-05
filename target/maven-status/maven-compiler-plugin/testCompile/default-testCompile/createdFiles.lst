@@ -1,0 +1,10 @@
+austin\testCases\AdminLogin.class
+austin\testCases\GrcLogin.class
+austin\testCases\InitiatorLogin.class
+austin\testCases\ResearchLogin.class
+austin\utilities\Capture.class
+austin\pageObjects\functional\RegistrationsPageObjects.class
+austin\pageObjects\functional\LoginPage.class
+austin\testCases\BaseClass.class
+austin\testCases\InvestigatorLogin.class
+austin\utilities\ReadConfig.class
