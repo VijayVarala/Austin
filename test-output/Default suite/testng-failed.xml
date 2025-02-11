@@ -3,13 +3,14 @@
 <suite name="Failed suite [Default suite]" guice-stage="DEVELOPMENT">
   <test thread-count="5" name="Default test(failed)">
     <classes>
-      <class name="austin.testCases.Registrations">
+      <class name="austin.testCases.InitiatorRegistration">
         <methods>
-          <include name="testRoleDropdown"/>
+          <include name="InitiatorRegistration"/>
           <include name="teardown"/>
+          <include name="setupPage"/>
           <include name="setup"/>
         </methods>
-      </class> <!-- austin.testCases.Registrations -->
+      </class> <!-- austin.testCases.InitiatorRegistration -->
     </classes>
   </test> <!-- Default test(failed) -->
 </suite> <!-- Failed suite [Default suite] -->

@@ -1,101 +1,149 @@
 package austin.pageObjects.functional;
 
 import java.time.Duration;
-import java.util.*;
-import org.mortbay.util.Scanner;
-import org.openqa.selenium.By;
+
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
-import org.testng.annotations.Test;
 
-import austin.testCases.BaseClass;
+public class RegistrationsPageObjects {
+    private WebDriver driver;
+    private static WebDriverWait wait;
 
-public class RegistrationsPageObjects extends BaseClass
-{
-	private static WebDriver driver;
-	private static WebDriverWait wait;
+    @FindBy(xpath = "//div[@class='signup-btn-sign-page']")
+    private WebElement signupButton;
+    
+    @FindBy(id = "name")
+    private WebElement nameField;
 
-	@FindBy(id="role")
-	static
-	WebElement role;
+    @FindBy(id = "role")
+    private WebElement roleDropdown;
+    
+    @FindBy(id="affiliatedOrganization")
+    private WebElement affiliatedOrganization;
 
-	@FindBy(id="name")
-	WebElement name;
+    @FindBy(id = "phoneNumber")
+    private WebElement phoneField;
 
-	@FindBy(id="phoneNumber")
-	WebElement phonenumber;
+    @FindBy(id = "email")
+    private WebElement emailField;
 
-	@FindBy(id="email")
-	WebElement mail;
+    @FindBy(id = "organization")
+    private WebElement organizationField;
 
-	@FindBy(id="affiliatedOrganization")
-	WebElement affiliatedorganization;
+    @FindBy(id = "professionalTitle") // Only for Governance Committee
+    private WebElement professionalTitle;
 
-	@FindBy(id="researchExperience")
-	WebElement researchExperience;
+    @FindBy(id = "committerole") // Only for Governance Committee
+    private WebElement committeeRole;
 
-	@FindBy(id="organization")
-	WebElement organization;
+    @FindBy(id = "researchExperience") // Only for Other Roles
+    private WebElement researchExperience;
 
-	@FindBy(id="professionalTitle")
-	WebElement professionalTitle;
+    @FindBy(xpath = "//button[@class='submit-btn']")
+    private WebElement submitButton;
 
-	@FindBy(id="committerole")
-	WebElement committerole;
 
-	public RegistrationsPageObjects(WebDriver driver) 
-	{
-		this.driver = driver;
-		this.wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-		PageFactory.initElements(driver, this);
-	}
-public static void main(String[] args) throws InterruptedException {
-	driver= new ChromeDriver();
-	driver.get(baseURL);
-		LoginPage l= new LoginPage(driver);
-		l.clickSignupButton();
-		Thread.sleep(3000);
-		WebElement ele=driver.findElement(By.id("role"));
-		Select select = new Select(ele);
-		waitUntilVisible(ele);
-		select.selectByVisibleText("Initiator");
-		WebElement element=driver.findElement(By.linkText("Initiator"));
-		if(element.equals("Initiator")) 
-		{
-			System.out.println("Yessss");
-		}
-	
-			
-				
-		select.selectByVisibleText("Principal Investigator");
-		select.selectByVisibleText("Governance Committee");
-		select.selectByVisibleText("Research Team");
-		verifyInputFieldsForRole("Initiator");
-	
-	
-	}
+    @FindBy(id = "successMessage")
+    private WebElement successMessage;
 
-	private static void verifyInputFieldsForRole(String string) 
-	{
-		// TODO Auto-generated method stub
+    public RegistrationsPageObjects(WebDriver driver) {
+        this.driver = driver;
+        this.wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        PageFactory.initElements(driver, this);
+    }
 
-	}
+    public void clickSignUp() {
+        waitUntilClickable(signupButton);
+        signupButton.click();
+    }
 
-	private static void waitUntilVisible(WebElement element) 
-	{
-		wait.until(ExpectedConditions.visibilityOf(element));
-	}
+    public void selectRole(String role) {
+        waitUntilVisible(roleDropdown);
+        Select select = new Select(roleDropdown);
+        select.selectByVisibleText(role);
+    }
 
-	// Wait until an element is clickable
-	private void waitUntilClickable(WebElement element) 
-	{
-		wait.until(ExpectedConditions.elementToBeClickable(element));
-	}
+    public void fillCommonFields(String name,String phone, String email, String organization) {
+    	 nameField.sendKeys(name);
+         phoneField.sendKeys(phone);
+         emailField.sendKeys(email);
+         organizationField.sendKeys(organization);
+    }
 
+    public void fillGovernanceCommitteeFields(String profTitle) {
+        waitUntilVisible(professionalTitle);
+        professionalTitle.sendKeys(profTitle);
+       
+    }
+    public void selectAffiliatedOrganization(int affiOrganization) {
+        wait.until(ExpectedConditions.visibilityOf(affiliatedOrganization));
+        Select select = new Select(affiliatedOrganization);
+        select.selectByIndex(affiOrganization);
+    }
+    
+    public void selectResearchExperience(int experience) {
+        wait.until(ExpectedConditions.visibilityOf(researchExperience));
+        Select select = new Select(researchExperience);
+        select.selectByIndex(experience);
+    }
+
+
+    public void selectCommitteeRole(int CommitteeRole) {
+        waitUntilVisible(committeeRole);
+        Select select = new Select(committeeRole);
+        select.selectByIndex(CommitteeRole);
+    }
+
+    public void fillOtherRolesFields(int experience) {
+        waitUntilVisible(researchExperience);
+        Select select = new Select(researchExperience);
+        select.selectByIndex(experience);
+    }
+
+    public void submitForm() {
+        waitUntilClickable(submitButton);
+        submitButton.click();
+    }
+    
+    
+    public void enterUserName(String username) {
+        waitUntilVisible(emailField);
+        emailField.sendKeys(username);
+       
+    }
+    
+
+    public boolean isRegistrationSuccessful() {
+        return wait.until(ExpectedConditions.visibilityOf(successMessage)).isDisplayed();
+    }
+
+    public boolean verifyFieldsForRole(String role) {
+        waitUntilVisible(roleDropdown);
+
+        boolean isPhoneVisible = phoneField.isDisplayed();
+        boolean isEmailVisible = emailField.isDisplayed();
+        boolean isOrgVisible = organizationField.isDisplayed();
+
+        if (role.equals("Governance Committee")) {
+            boolean isProfTitleVisible = professionalTitle.isDisplayed();
+            boolean isCommitteeRoleVisible = committeeRole.isDisplayed();
+            return isPhoneVisible && isEmailVisible && isOrgVisible && isProfTitleVisible && isCommitteeRoleVisible;
+        } else {
+            boolean isResearchExpVisible = researchExperience.isDisplayed();
+            return isPhoneVisible && isEmailVisible && isOrgVisible && isResearchExpVisible;
+        }
+    }
+
+    private void waitUntilVisible(WebElement element) {
+        wait.until(ExpectedConditions.visibilityOf(element));
+    }
+
+    private void waitUntilClickable(WebElement element) {
+        wait.until(ExpectedConditions.elementToBeClickable(element));
+    }
 }
